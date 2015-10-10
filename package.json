@@ -1,0 +1,22 @@
+{
+    "name": "digo-uglify-js",
+    "version": "0.1.0",
+    "repository": "http://github.com/digojs/digo-uglify-js",
+    "description": "digo 插件：使用 UglifyJS 混淆、压缩或格式化 JS",
+    "keywords": [
+        "digo plugin",
+        "mangle js",
+        "minify js",
+        "compress js",
+        "format js",
+        "beautify js"
+    ],
+    "license": "MIT",
+    "author": "xuld <xuld@vip.qq.com>",
+    "dependencies": {
+        "uglify-js": "latest"
+    },
+    "files": [
+        "index.js"
+    ]
+}
