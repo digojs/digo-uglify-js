@@ -106,7 +106,8 @@ digo.src("*.js").pipe("digo-uglify-js", {
     },
     inSourceMap: null,          // 输入的源映射对象。*
     outSourceMap: false,        // 是否生成源映射。*
-    fromString: true,           // 表示输入是源码内容，而不是路径。*
+    toplevel: false,            // 是否处理全局变量和函数。
+    ie8: true,                  // 是否兼容 IE8*
 });
 ```
 

@@ -1,6 +1,6 @@
 {
     "name": "digo-uglify-js",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "repository": "http://github.com/digojs/digo-uglify-js",
     "description": "digo 插件：使用 UglifyJS 混淆、压缩或格式化 JS",
     "keywords": [

@@ -1,6 +1,6 @@
 var assert = require("assert");
 var digo = require("digo");
-var plugin = require("./");
+var plugin = require("..");
 
 describe('digo-uglifyJs', function () {
 
@@ -14,19 +14,20 @@ describe('digo-uglifyJs', function () {
 
     it("error", function () {
         var error = false;
-        digo.onLog = function (data) {
+        digo.on("log", function (data) {
             error = true;
-            assert.equal(data.startLine, 0);
-            assert.equal(data.startColumn, 8);
+            assert.equal(data.line, 0);
+            assert.equal(data.column, 8);
             return false;
-        };
+        });
         assert.equal(exec("var b = ;"), "var b = ;");
         assert.equal(error, true);
-        delete digo.onLog;
+	digo.off("log");
     });
 
     function exec(input, options) {
-        var file = new digo.File("", "", input);
+        var file = new digo.File();
+	file.content = input;
         plugin(file, options);
         return file.content;
     }

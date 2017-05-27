@@ -4,9 +4,10 @@ module.exports = function UglifyJS(file, options) {
 
     // 设置默认选项。
     options = merge(options, {
-        fromString: true,
-        inSourceMap: file.sourceMapObject,
-        outSourceMap: file.sourceMap ? file.sourceMapPath : null,
+        sourceMap: file.sourceMap ? {
+            content: file.sourceMapObject
+        } : false,
+        ie8: true,
         parse: {
             filename: file.srcPath
         },
@@ -24,34 +25,27 @@ module.exports = function UglifyJS(file, options) {
         }
     });
 
-    // 设置警告函数。
-    if (options.warnings || options.compress.warnings) {
-        var oldWarnFunction = uglifyJS.AST_Node.warn_function;
-        uglifyJS.AST_Node.warn_function = function (output) {
-            var match = /\s*\[\d+:(\d+),(\d+)\]$/.exec(output);
+    // 生成。
+    var result = uglifyJS.minify(file.content, options);
+    if (result.error) {
+        return file.error({
+            plugin: UglifyJS.name,
+            message: result.error.message,
+            line: result.error.line == undefined ? undefined : result.error.line - 1,
+            column: result.error.col,
+            error: result.error,
+        });
+    }
+    if (result.warnings && result.warnings.length) {
+        for (var i = 0; i < result.warnings.length; i++) {
+            var warning = result.warnings[i];
+            var match = /\s*\[\d+:(\d+),(\d+)\]$/.exec(warning);
             file.warning({
                 plugin: UglifyJS.name,
-                message: match ? output.substr(0, match.index) : output,
+                message: match ? warning.substr(0, match.index) : warning,
                 line: match && +match[1],
                 column: match && +match[2]
             });
-        };
-    }
-
-    // 生成。
-    try {
-        var result = uglifyJS.minify(file.content, options);
-    } catch (e) {
-        return file.error({
-            plugin: UglifyJS.name,
-            message: e.message,
-            line: e.line - 1,
-            column: e.col,
-            error: e,
-        });
-    } finally {
-        if (oldWarnFunction) {
-            uglifyJS.AST_Node.warn_function = oldWarnFunction;
         }
     }
 
